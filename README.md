@@ -8,9 +8,9 @@ Simple class to make MySql storage and object mapping, querying and return lists
 
 ## properties
 
- **encloseFieldNames**: boolean, if true encloses fields and table names in backticks(`) in all statements
-**typeCasting**: boolean, if true internally changes the type of data before is assigned to the object for types: integer, float and boolean
-**boolCastingList**: array used for casting boolean that comes as string for example if value comes from database like "yes" or "YES" is casting to TRUE. default values are;
+- **encloseFieldNames**: boolean, if true encloses fields and table names in backticks(`) in all statements
+- **typeCasting**: boolean, if true internally changes the type of data before is assigned to the object for types: integer, float and boolean
+- **boolCastingList**: array used for casting boolean that comes as string for example if value comes from database like "yes" or "YES" is casting to TRUE. default values are;
 
     [
     	"true"=>true,
@@ -25,16 +25,16 @@ Simple class to make MySql storage and object mapping, querying and return lists
     	"0"=>false
     ];
 
-**queryDebug**: an stack of the queries and parameters executed for the class for debug what is sended to the data base. by default stores 10 queries.
-**queryDebugSize**:  determines the max queries stored in the stack queryDebug. default is 10
+- **queryDebug**: an stack of the queries and parameters executed for the class for debug what is sended to the data base. by default stores 10 queries.
+- **queryDebugSize**:  determines the max queries stored in the stack queryDebug. default is 10
 
 ### for queries building
-**columns**: comma separated string with the columns you wanna fill the query
-**parameters**: associative array of parameters to use in query statements, [":name" => value]
-**order_by**: order by clause string to use in query
-**limit**: limit clause string to use in query
-**group_by**: group by clause string to use in query
-**having**: group by clause string to use in query
+- **columns**: comma separated string with the columns you wanna fill the query
+- **parameters**: associative array of parameters to use in query statements, [":name" => value]
+- **order_by**: order by clause string to use in query
+- **limit**: limit clause string to use in query
+- **group_by**: group by clause string to use in query
+- **having**: group by clause string to use in query
 
 ## examples
 
@@ -255,13 +255,15 @@ $usr = new usr();
 parameters:
 
  1. **type**: tipe of elemet to return;
-- "**objectList**"(default):
-- "**objectListGroupedByField**": return a nested list of objects grouped by a field
-- "**singleValue**": return a single field Value
-- "**ArrayColumn**": return array of values of a Column defined
-- "**keyValuePairs**": Array key-Value Pairs, neets select exactly 2 columns
-- "**indexedUnique**": Array key-[row array]
-- "**groupedByFirstField**": Array key-[row group array], where key is the first colum you defined
+ ```
+"**objectList**"(default):
+"**objectListGroupedByField**": return a nested list of objects grouped by a field
+"**singleValue**": return a single field Value
+"**ArrayColumn**": return array of values of a Column defined
+"**keyValuePairs**": Array key-Value Pairs, neets select exactly 2 columns
+"**indexedUnique**": Array key-[row array]
+"**groupedByFirstField**": Array key-[row group array], where key is the first colum you defined
+```
 
 2. **option**: in the case of "objectListGroupedByField", "singleValue" and  "ArrayColumn" is used to specify the column name.
 3. **addPrimaryKeysInWhere**: ads automatically the primary keys in where clause, is used in load method to make the select.
