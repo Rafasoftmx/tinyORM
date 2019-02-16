@@ -3,12 +3,12 @@ Simple class to make MySql storage and object mapping, querying and return lists
 
   - automatically map object and table
   - inyect data from table to object and vice versa
-  - inyect _post _get to object
+  - inyect array \__post \__get to object
   - select and return a list of objects
 
 ## properties
 
-- **encloseFieldNames**: boolean, if true encloses fields and table names in backticks(`) in all statements
+- **encloseFieldNames**: boolean, if true encloses fields and table names in backticks(\`) in all statements
 - **typeCasting**: boolean, if true internally changes the type of data before is assigned to the object for types: integer, float and boolean
 - **boolCastingList**: array used for casting boolean that comes as string for example if value comes from database like "yes" or "YES" is casting to TRUE. default values are;
 
@@ -55,7 +55,7 @@ in the file class.pdoDB.php you can configure yor conection:
     ...
 
 SQL to create simple table for example:
-
+```
     CREATE TABLE `NewTable` (
     `id`  int NOT NULL AUTO_INCREMENT ,
     `date`  datetime NULL ,
@@ -66,12 +66,14 @@ SQL to create simple table for example:
     PRIMARY KEY (`id`)
     )
     ;
+```
+
 **note** the id of the table is auto increment and primary key
 and the enabled is bit because i want a boolean field, also can be TINYINT(1).
 the tables names is 'users'.
 
 the class that represents the tables is:
-
+```
     class usr
     {
     	public  $id = 0;
@@ -85,6 +87,7 @@ the class that represents the tables is:
        }//EOF
 
     }//EOC
+```
 
 **note**  i define the default values for the object, because the class remembers it for casting the varible for `integer`, `float` and `boolean`
 for a basic example i create an instance of the class 'usr' and use the 'tinyORM' for manage the information in the object.
@@ -95,12 +98,12 @@ the constructor neds:
 3. array alias for properties names and table column (optional)
 
 basic example:
-
+```
     $usr = new usr();
     $tinyORM = new tinyORM($usr,"users"); //yeah!! we map the object, table  and initialize the class for use them
-
+```
 for example if the properties in our object not match with the column names in the table, we can define an array with the relation of properties and column names:
-
+```
     // in this case the class not match with the table columns
     class usr
     {
@@ -135,9 +138,9 @@ for example if the properties in our object not match with the column names in t
     ];
 
     $tinyORM = new tinyORM($usr,"users",$usr_alias);
-
+```
 ### insert our object to the table
-
+```
     $usr = new usr();
     $tinyORM = new tinyORM($usr,"users");
 
@@ -150,11 +153,11 @@ for example if the properties in our object not match with the column names in t
 
     //insert all data from the object in the DB
     $tinyORM->insert(); // and that's all
-
+```
 
 in the next example we can add all the functionality inside the object including a tinyORM instance in the class  and initialize in constructor function.
 
-
+```
     class usr
     {
     	public  $id = 0;
@@ -182,10 +185,10 @@ in the next example we can add all the functionality inside the object including
     $usr->enabled = false;
 
     $usr->ORM->insert();
-
+```
 
 ### Update our object to the table
-
+```
     $usr = new usr();
 
     $usr->id = 1; //set the id of the element we want to update
@@ -196,17 +199,17 @@ in the next example we can add all the functionality inside the object including
     $usr->enabled = false;
 
     $usr->ORM->update();
-
+```
 ### Delete our object in the table
-
+```
     $usr = new usr();
 
     $usr->id = 1; //set the ID of the element we want delete
     $usr->ORM->delete();
-
+```
 ### replace record on the table
 this Mysql functionality inserts a record if not exist, but if exist `DELETES` previous and inserts new one with the same PRIMARY KEY or a UNIQUE index.
-
+```
     $usr = new usr();
     $tinyORM = new tinyORM($usr,"users");
 
@@ -218,10 +221,10 @@ this Mysql functionality inserts a record if not exist, but if exist `DELETES` p
     $usr->enabled = true;
 
     $tinyORM->replace();
-
+```
 ### upsert record on the table
 my version of replace or insert on duplicate key update. Basically checks the existence of a record in table using PRIMARY KEYs, if exist update else insert.
-
+```
     $usr = new usr();
     $tinyORM = new tinyORM($usr,"users");
 
@@ -233,9 +236,9 @@ my version of replace or insert on duplicate key update. Basically checks the ex
     $usr->enabled = true;
 
     $tinyORM->upsert();
-
+```
 ### load record to the object
-
+```
 $usr = new usr();
 
     $usr->id= 7;// id we want to load
@@ -245,7 +248,7 @@ $usr = new usr();
     print "<pre>";
     var_dump($usr);
     print "</pre>";
-
+```
 ### Select records in the database and return a list of objects and useful data structures
 
 - build and execute a select query, returns a list of objects of the class defined
@@ -271,13 +274,14 @@ parameters:
 3. **addPrimaryKeysInWhere**: ads automatically the primary keys in where clause, is used in load method to make the select.
 
 ### make a list of objects
-
+```
     $usr = new usr();
     $list = $usr->ORM->select(); // be careful, selects all table
 
     print "<pre>";
     var_dump($list);
     print "</pre>";
+```
 for make a selection we can use different part of statement and send extra parameters to make a query and affects all methods that makes a query.
 
 - where:
@@ -291,61 +295,62 @@ for make a selection we can use different part of statement and send extra param
 all of them works exactly like in Mysql, just need avoid put the name of clause. and internally are escaped.
 
 ### where example
-
+```
     $usr->ORM->where = "id > 7 AND mail = 'example@some.com'";
+```
 becomes:
-
+```
     SELECT `id`, `date`, `mail`, `name`, `rol`, `enabled` FROM `users`  WHERE id > 10 AND mail = 'example@some.com';
-
+```
 **important note**:
-by default automatically all colums and table names are scaped using 'formatIdentifier()' method, by this reason are between backtick (`),
+by default automatically all colums and table names are scaped using 'formatIdentifier()' method, by this reason are between backtick (\`),
 to avoid this, set encloseFieldNames = false; its can be useful wen uses complex colums.
 
 ### parameterized query: (recommended to try avoiding sql injection)
-
+```
     $usr->ORM->where = "id > :id AND mail = :mail";
     $usr->ORM->parameters = [":id" => 7, ":mail" => "example@some.com" ];
-
+```
 becomes:
-
+```
     SELECT `id`, `date`, `mail`, `name`, `rol`, `enabled` FROM `users`  WHERE id > :id AND mail = :mail;
-
+```
 ### columns example
 
 it's useful for select modes that not return an object or when you want populate partially a object. affects all methods that makes a query.
-
+```
     $usr->ORM->columns = "id, mail";
     $usr->ORM->where = "id > :id AND mail = :mail";
     $usr->ORM->parameters = [":id" => 7, ":mail" => "example@some.com"];
-
+```
 ### order_by example
-
+```
     $usr->ORM->where = "id > :id AND mail = :mail";
     $usr->ORM->parameters = [":id" => 7, ":mail" => "example@some.com" ];
 
     $usr->ORM->order_by = "id DESC,name ASC,mail";
-
+```
 becomes:
-
+```
     SELECT `id`, `date`, `mail`, `name`, `rol`, `enabled` FROM `users`  WHERE id > :id AND mail = :mail ORDER BY `id` DESC , `name` ASC , `mail`;
-
+```
 ### limit example
-
+```
     $usr->ORM->where = "id > :id AND mail = :mail";
     $usr->ORM->order_by = "id DESC,name ASC,mail";
 
     $usr->ORM->limit = ":limit";
 
     $usr->ORM->parameters = [":id" => 7, ":mail" => "example@some.com",  ":limit" => 2 ];
-
+```
 **note** that i add ':limit' parameter in the list and the order not matter, nor for parameters neither clauses.
 
 becomes:
-
+```
     SELECT `id`, `date`, `mail`, `name`, `rol`, `enabled` FROM `users`  WHERE id > :id AND mail = :mail    ORDER BY `id` DESC , `name` ASC , `mail`  LIMIT :limit;
-
+```
 ### group_by example
-
+```
     $usr->ORM->where = "id > :id AND mail = :mail";
     $usr->ORM->order_by = "id DESC";
     $usr->ORM->limit = ":limit";
@@ -353,13 +358,13 @@ becomes:
     $usr->ORM->group_by = "rol,mail";
 
     $usr->ORM->parameters = [":id" => 7, ":mail" => "example@some.com",  ":limit" => 10 ];
-
+```
 becomes:
-
+```
     SELECT `id`, `date`, `mail`, `name`, `rol`, `enabled` FROM `users`  WHERE id > :id AND mail = :mail  GROUP BY `rol`, `mail`   ORDER BY `id` DESC   LIMIT :limit;
-
+```
 ### having example
-
+```
     $usr->ORM->columns = "*,COUNT(id)";
     $usr->ORM->where = "id > :id";
     $usr->ORM->group_by = "mail";
@@ -367,16 +372,16 @@ becomes:
     $usr->ORM->having = "COUNT(id) > 2";
 
     $usr->ORM->parameters = [":id" => 7];
-
+```
 becomes:
-
+```
     SELECT *, COUNT(id) FROM `users` WHERE id > :id  GROUP BY `mail` HAVING COUNT(id) > 2;
-
+```
 **Other Select option for useful data structures**
 
 ### "objectListGroupedByField" example
 return a nested list of objects grouped by a field.
-
+```
     $usr = new usr();
 
     $list = $usr->ORM->select("objectListGroupedByField","rol");
@@ -384,9 +389,9 @@ return a nested list of objects grouped by a field.
     print "<pre>";
     var_dump($list);
     print "</pre>";
-
+```
 returns:
-
+```
     array(2) {
       ["1"]=>	  array(5) {
     				OBJECT
@@ -405,10 +410,10 @@ returns:
     in this example..
     ["1"] is a rol
     ["2"] is another role
-
+```
 ### "singleValue" example
 return a single field Value.
-
+```
     $usr = new usr();
     $usr->ORM->where = "id = :id";
     $usr->ORM->parameters = [":id" => 7];
@@ -418,14 +423,14 @@ return a single field Value.
     print "<pre>";
     var_dump($list);
     print "</pre>";
-
+```
     returns:
-
+```
     string(16) "example@some.com"
-
+```
 ### "ArrayColumn" example
 return an array of all values of a Column defined.
-
+```
     $usr = new usr();
     $usr->ORM->limit = ":limit";
     $usr->ORM->parameters = [":limit" => 10];
@@ -442,10 +447,10 @@ return an array of all values of a Column defined.
       [0]=>  string(16) "example@some.com"
       [1]=>  string(9) "Dr@Seuss"
     }
-
+```
 ### "keyValuePairs" example
 return an array key-Value Pairs, neets select exactly 2 columns.
-
+```
     $usr = new usr();
     $usr->ORM->columns = "name,mail";
     $usr->ORM->limit = ":limit";
@@ -456,17 +461,17 @@ return an array key-Value Pairs, neets select exactly 2 columns.
     print "<pre>";
     var_dump($list);
     print "</pre>";
-
+```
 returns:
-
+```
     array(2) {
       ["jane doe"]=>  string(16) "example@some.com"
       ["Dr. Seuss"]=>  string(9) "Dr@Seuss"
     }
-
+```
 ### "indexedUnique" example
 return an array key-[row array]
-
+```
     $usr = new usr();
     $usr->ORM->columns = "name,mail";
     $usr->ORM->limit = ":limit";
@@ -477,9 +482,9 @@ return an array key-[row array]
     print "<pre>";
     var_dump($list);
     print "</pre>";
-
+```
 returns:
-
+```
     array(2) {
       [1]=>
       array(10) {
@@ -508,11 +513,11 @@ returns:
         [4]=>    string(1) "1"
       }
     }
-
+```
 
 ### "groupedByFirstField" example
 return an array key-[row group array], where key is the first colum you defined.
-
+```
     $usr = new usr();
     $usr->ORM->columns = "name,id,mail,rol,enabled"; // sets 'name' like first row
     $usr->ORM->limit = ":limit";
@@ -523,9 +528,9 @@ return an array key-[row group array], where key is the first colum you defined.
     print "<pre>";
     var_dump($list);
     print "</pre>";
-
+```
 returns:
-
+```
     array(2) {
       ["jane doe"]=>
     				  array(8) {
@@ -550,11 +555,11 @@ returns:
     					[3]=>    string(1) "1"
     				  }
     }
-
+```
 
 ### fill Object From an Array
 populates the object with an array, match the elements by the key in array and optional uses an alias array for match.
-its useful for example when te data becomes from $_POST array, in this case we can push all form data to the object.
+its useful for example when te data becomes from $\_POST array, in this case we can push all form data to the object.
 
 for do it use the method fillObjectFromArray()
 
@@ -565,7 +570,7 @@ parameters:
 **example**
 
 html form:
-
+```
     <form action="postExample.php" method="post">
       name:<br>  <input type="text" name="name" value="Mickey"><br>
       mail:<br> <input type="text" name="mail" value="mouse@mickey.com"><br>
@@ -574,9 +579,9 @@ html form:
       <br><br>
       <input type="submit" value="Submit">
     </form>
-
+```
 **note** the value of **'enabled'**, it going to be cast to bool using this array:
-
+```
     $tinyORM->boolCastingList =
     [
     	"true"=>true,
@@ -590,12 +595,13 @@ html form:
     	"no"=>false,
     	"0"=>false
     ];
+```
 and **'rol'** is going to be cast to int.
 
 it happens because since the begin the class was defined with initial values that determines the casting, is only for `integer`, `float` and `boolean`
 
 postExample.php
-
+```
     class usr
     {
     	public  $id = 1;
@@ -623,9 +629,9 @@ postExample.php
     var_dump($usr);
     var_dump($_POST);
     print "</pre>";
-
+```
 returns:
-
+```
     usr:
     object(usr)#7 (7) {
       ["id"]=>  int(1)
@@ -647,9 +653,10 @@ returns:
       ["rol"]=>  string(1) "3"
       ["enabled"]=>  string(0) ""
     }
+```
 ### using alias array and fill Object From an Array
 suppose that the names in form are differences that the object properties.
-
+```
     $form_alias = [
     	"id_user" => "id",
     	"mail_user" => "mail",
@@ -668,10 +675,10 @@ suppose that the names in form are differences that the object properties.
     var_dump($usr);
     var_dump($_POST);
     print "</pre>";
-
+```
 ### create the class object automatically from table
 if we have created the table in database and sets the connection we can create the class that represents that data for use with this class.
-using teh method createClass(), which creates a file of the class:  'class.[tableName]_[timestamp].php'.
+using teh method createClass(), which creates a file of the class:  'class.[tableName]\_[timestamp].php'.
 
 parameters:
 1. tableName: the table we going to use to read columns for create the class
@@ -679,12 +686,12 @@ parameters:
 3. sufix: string added to the end of the name of every property (optional)
 
 example:
-
+```
     $tinyORM = new tinyORM();
     $tinyORM->createClass("users");
-
+```
 resul file 'class.Users_1550283641.php':
-
+```
     <?php
 
     //Adequate the class, delete unnecessary properties or change the names.
@@ -715,7 +722,7 @@ resul file 'class.Users_1550283641.php':
        }
     }
     ?>
-
+```
 ### cache
 the class uses **phpfastcache** for manage cache, for avoid excesive consults in table maping,
 **is important** to note that **once the tables is mapped the cache stores all data**, so if you make a change in the table the class will ignore it untill you clean cache.
@@ -730,7 +737,7 @@ by these reason the queries and parameters are pushes in a stack that you can co
 the stack is in the property "queryDebug" it can store 10 queryes for default, but you can increse the number with the property "queryDebugSize".
 
 example:
-
+```
     $usr = new usr();
 
     $usr->ORM->select();// be careful, selects all table
@@ -748,3 +755,4 @@ example:
     		["parameters"]=>    array(0) { }
       }
     }
+```
