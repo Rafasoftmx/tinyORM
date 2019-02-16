@@ -24,7 +24,7 @@
 * see examples at the end of this file
 
 */
-include_once 'kint.phar';
+
 
 class fileDirHandler
 {
