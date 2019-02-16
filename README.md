@@ -3,7 +3,7 @@ Simple class to make MySql storage and object mapping, querying and return lists
 
   - automatically map object and table
   - inyect data from table to object and vice versa
-  - inyect array \__post \__get to object
+  - inyect array $\__post $\__get to object
   - select and return a list of objects
 
 ## properties
@@ -42,7 +42,7 @@ Simple class to make MySql storage and object mapping, querying and return lists
 
 **set database parameters**
 in the file class.pdoDB.php you can configure yor conection:
-
+```
     class pdoDB
     {
 
@@ -53,7 +53,7 @@ in the file class.pdoDB.php you can configure yor conection:
     	var  $db_pss= "pasword"; //Password
 
     ...
-
+```
 SQL to create simple table for example:
 ```
     CREATE TABLE `NewTable` (
@@ -261,13 +261,13 @@ parameters:
 
  1. **type**: tipe of elemet to return;
  ```
-"objectList"(default): return a nested list of objects of the class defined
-"objectListGroupedByField": return a nested list of objects grouped by a field
-"singleValue": return a single field Value
-"ArrayColumn": return array of values of a Column defined
-"keyValuePairs": Array key-Value Pairs, neets select exactly 2 columns
-"indexedUnique": Array key-[row array]
-"groupedByFirstField": Array key-[row group array], where key is the first colum you defined
+objectList (default): return a nested list of objects of the class defined
+objectListGroupedByField return a nested list of objects grouped by a field
+singleValue: return a single field Value
+ArrayColumn: return array of values of a Column defined
+keyValuePairs: Array key-Value Pairs, neets select exactly 2 columns
+indexedUnique: Array key-[row array]
+groupedByFirstField: Array key-[row group array], where key is the first colum you defined
 ```
 
 2. **option**: in the case of "objectListGroupedByField", "singleValue" and  "ArrayColumn" is used to specify the column name.
