@@ -12,6 +12,7 @@ Simple class to make MySql storage and object mapping, querying and return lists
 - **typeCasting**: boolean, if true internally changes the type of data before is assigned to the object for types: integer, float and boolean
 - **boolCastingList**: array used for casting boolean that comes as string for example if value comes from database like "yes" or "YES" is casting to TRUE. default values are;
 
+```
     [
     	"true"=>true,
     	"yes"=>true,
@@ -24,6 +25,7 @@ Simple class to make MySql storage and object mapping, querying and return lists
     	"no"=>false,
     	"0"=>false
     ];
+```
 
 - **queryDebug**: an stack of the queries and parameters executed for the class for debug what is sended to the data base. by default stores 10 queries.
 - **queryDebugSize**:  determines the max queries stored in the stack queryDebug. default is 10
