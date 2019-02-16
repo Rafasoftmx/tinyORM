@@ -1,6 +1,6 @@
 <?php
-include_once "class.pdoDB.php";
-include_once "class.fileDirHandler.php";
+include_once "class.pdoDB.php"; //https://github.com/Rafasoftmx/pdoDB
+include_once "class.fileDirHandler.php"; //https://github.com/Rafasoftmx/fileDirHandler
 
 //cache system phpfastcache https://www.phpfastcache.com/
 //for save some data about tables and objects and aboid to consult every time
