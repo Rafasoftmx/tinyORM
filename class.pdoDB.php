@@ -109,7 +109,7 @@ class pdoDB
 
 		$this->stmt = $this->pdo->prepare($query);
 		
-		// detect LIMIT clause and send parameters by bindParam
+		// detect LIMIT clause and send parameters by bindValue
 		if($this->fixParametersClauseLIMIT($query,$arrayParameters))
 		{
 			return $this->stmt->execute();
@@ -487,12 +487,12 @@ class pdoDB
 			{
 				$limitClause = $output_array[0];
 				
-				//send parameters by bindParam, detect if param is in LIMIT clause and sen it as PDO::PARAM_INT
+				//send parameters by bindValue, detect if param is in LIMIT clause and send it as PDO::PARAM_INT
 				foreach ($arrayParameters as $Key => $Value)
 				{
 					if(strpos ($limitClause,$Key) === false)
 					{
-						$this->stmt->bindValue($Key, $Value);
+						$this->stmt->bindValue($Key, $Value);	
 					}
 					else
 					{
@@ -797,7 +797,7 @@ getGroupedByFirstField()
 will group rows into a nested array, where indexes will be unique values from the first columns. e.g. 'SELECT sex, name, car FROM users'
 
 $db = new pdoDB();
-$result = $db->getIndexedUnique("SELECT grupo,username,email FROM usrs");
+$result = $db->getGroupedByFirstField("SELECT grupo,username,email FROM usrs");
 var_dump($result);
 
 
@@ -982,6 +982,5 @@ foreach ($db->stmt as $row)
 
 
 */
-
 
 ?>
