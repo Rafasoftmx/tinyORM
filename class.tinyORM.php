@@ -38,6 +38,7 @@ $cacheManager = CacheManager::getInstance('files');
   -inyect data from table to object and vice versa
   -inyect _post _get to object
   -select and return a list of objects
+  -use cache to avoid remap every time
   
   * see examples at the end of this file
 */
@@ -149,7 +150,8 @@ class tinyORM
 	* @access public
 	* @return array
 	*/
-    public function __debugInfo() {
+    public function __debugInfo()
+	{
         return ["tinyORM for table [".$this->tableName."] and object [".$this->objectClass."]"];
     }
 	
@@ -159,7 +161,8 @@ class tinyORM
 	* @access public
 	* @return string
 	*/
-    public function __toString() {
+    public function __toString()
+	{
         return "tinyORM for table [".$this->tableName."] and object [".$this->objectClass."]";
     }	
 	
@@ -1138,7 +1141,7 @@ class tinyORM
 				break;
 			case "boolean":
 				
-				if(gettype($val) == "string")
+				if(is_string($val))
 				{
 					$val = trim($val);
 					if(array_key_exists($val,$this->boolCastingList))
