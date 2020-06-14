@@ -119,7 +119,9 @@ class tinyORM
 	* @param string $propertiesAlias
 	*/
 	function __construct(&$object = null,$tableName = "",$propertiesAlias = [])
-	{		
+	{	
+		$this->db = new pdoDB();
+		
 		if($object !== null)
 		{
 			$this->object = &$object;
@@ -138,9 +140,7 @@ class tinyORM
 
 
 			$this->mapPropertiesAndColumns();
-		}
-		
-		$this->db = new pdoDB(); 
+		}	
 	}
 	
 	/*
@@ -783,9 +783,8 @@ class tinyORM
 		{
 			array_shift($this->queryDebug);
 		}
-		$this->queryDebug[] = ["time"=>date("H:i:s Y-m-d "),"query"=>$query,"parameters"=>$params];
-			
-		d($this->queryDebug);
+		$this->queryDebug[] = ["time"=>date("H:i:s Y-m-d "),"query"=>$query,"parameters"=>$params];			
+		
 		return $query;//return the armed full sentence
 
 	}
